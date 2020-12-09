@@ -76,3 +76,11 @@ print("The Final Encrypted message is: " + Final_Encrypt_Text)
 file1 = open("Encrypted_Message.txt", "w")
 file1.write(Final_Encrypt_Text)
 file1.close()
+
+file2 = open("Keyword.txt", "w")
+file2.write(keyword)
+file2.close()
+
+file3 = open("Key.txt", "w")
+file3.write(key)
+file3.close()

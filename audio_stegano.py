@@ -1,16 +1,25 @@
 import wave
 
-#Read the Encrypted message saved in the .txt file
 file1 = open("Encrypted_Message.txt", "r")
 message = file1.read()
 
 song = wave.open("song.wav", mode='rb')
 frame_bytes = bytearray(list(song.readframes(song.getnframes())))
 
-# This appends the dummy data to fill out rest of bytes in our message
-message2 = message + int((len(frame_bytes)-(len(message)*8*8))/8) * 'x'
-print(message)
 
+message = message + int((len(frame_bytes)-(len(message)*8*8))/8) * 'x'
+bits = list(map(int, ''.join([bin(ord(i)).lstrip('0b').rjust(8,"0") for i in message])))
+print(bits)
+for i, bit in enumerate(bits):
+    frame_bytes[i] = (frame_bytes[i] & 254) | bit
+
+frame_modified = bytes(frame_bytes)
+
+
+with wave.open('song_embedded.wav', 'wb') as fd:
+    fd.setparams(song.getparams())
+    fd.writeframes(frame_modified)
+song.close()
 
 
 
