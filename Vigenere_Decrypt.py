@@ -5,11 +5,10 @@ file2 = open("Keyword.txt", "r")
 keyword = file2.read()
 
 file3 = open("Key.txt", "r")
-keywordSequence = file3.read()
+key = file3.read()
 
-
-def decrypt(message, keyword):
-  matrix = createDecrMatrix(getKeywordSequence(keyword), message)
+def decrypt(message, key):
+  matrix = createDecrMatrix(getKeywordSequence(key), message)
 
   plaintext = "";
   for r in range(len(matrix)):
@@ -18,17 +17,18 @@ def decrypt(message, keyword):
   return plaintext
 
 
-def createDecrMatrix(keywordSequence, message):
-  width = len(keywordSequence)
+def createDecrMatrix(key, message):
+  width = len(key)
   height = len(message) / width
+  height = int(height)
   if height * width < len(message):
     height += 1
 
   matrix = createEmptyMatrix(width, height, len(message))
 
   pos = 0
-  for num in range(len(keywordSequence)):
-    column = keywordSequence.index(num+1)
+  for num in range(len(getKeywordSequence(key))):
+    column = getKeywordSequence(key).index(num+1)
 
     r = 0
     while (r < len(matrix)) and (len(matrix[r]) > column):
@@ -52,10 +52,10 @@ def createEmptyMatrix(width, height, length):
   return matrix
 
 
-def getKeywordSequence(keyword):
+def getKeywordSequence(key):
   sequence = []
-  for pos, ch in enumerate(keyword):
-    previousLetters = keyword[:pos]
+  for pos, ch in enumerate(key):
+    previousLetters = key[:pos]
     newNumber = 1
     for previousPos, previousCh in enumerate(previousLetters):
       if previousCh > ch:
@@ -64,3 +64,27 @@ def getKeywordSequence(keyword):
         newNumber += 1
     sequence.append(newNumber)
   return sequence
+
+
+cipher_text = decrypt(message, key)
+
+if len(cipher_text) == len(keyword):
+    Final_Keyword = keyword
+else:
+    n = len(cipher_text) / len(keyword)
+    n = int(n)
+    Final_Keyword = ""
+    for i in range(n):
+        Final_Keyword += keyword
+    rem = len(cipher_text) % len(keyword)
+    for i in range(rem):
+        Final_Keyword += keyword[i]
+
+orig_text = []
+for i in range(len(cipher_text)):
+    x = (ord(cipher_text[i]) - ord(Final_Keyword[i]) + 26) % 26
+    x += ord('A')
+    orig_text.append(chr(x))
+Original_message = "".join(orig_text)
+
+print('The original message communicated is: ' + Original_message)

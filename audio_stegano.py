@@ -8,8 +8,8 @@ frame_bytes = bytearray(list(song.readframes(song.getnframes())))
 
 
 message = message + int((len(frame_bytes)-(len(message)*8*8))/8) * 'x'
-bits = list(map(int, ''.join([bin(ord(i)).lstrip('0b').rjust(8,"0") for i in message])))
-print(bits)
+bits = list(map(int, ''.join([bin(ord(i)).lstrip('0b').rjust(8,'0') for i in message])))
+
 for i, bit in enumerate(bits):
     frame_bytes[i] = (frame_bytes[i] & 254) | bit
 
